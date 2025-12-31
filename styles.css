@@ -1,0 +1,229 @@
+:root {
+    --bg: linear-gradient(35deg, #f3f4f6, #9ddbff);
+    --card: #ffffff;
+    --text: #0f172a;
+    --accent: #2563eb;
+    --accent-light: #3b82f6;
+    --border-soft: rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="dark"] {
+    --bg: linear-gradient(35deg, #020617, #1c397b);
+    --card: #020617;
+    --text: #f8fafc;
+    --accent: #3b82f6;
+    --accent-light: #60a5fa;
+    --border-soft: rgba(255, 255, 255, 0.08);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    transition: background 0.9s ease, color 0.9s ease;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 20px;
+}
+
+.card {
+    background: var(--card);
+    border-radius: 18px;
+    padding: 20px;
+    box-shadow:
+        0 10px 25px rgba(0, 0, 0, 0.08),
+        inset 0 0 0 1px var(--border-soft);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow:
+        0 16px 40px rgba(0, 0, 0, 0.15),
+        inset 0 0 0 1px var(--border-soft);
+}
+
+.card-title {
+    font-weight: 600;
+    font-size: 1.05rem;
+    margin-bottom: 6px;
+    opacity: 0.9;
+}
+
+.card-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--accent);
+}
+
+.card-btns {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+}
+
+.card-btns button {
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    color: white;
+    border: none;
+    padding: 7px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+
+.card-btns button:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+}
+
+.logs,
+.filters {
+    padding: 20px;
+}
+
+.filters select,
+.logs button,
+input[type="file"] {
+    margin: 10px 10px 10px 0;
+    padding: 9px 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border-soft);
+    background: var(--card);
+    color: var(--text);
+}
+
+.log-item {
+    padding: 12px;
+    margin: 8px 0;
+    background: var(--card);
+    border-radius: 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow:
+        0 6px 18px rgba(0, 0, 0, 0.08),
+        inset 0 0 0 1px var(--border-soft);
+}
+
+.log-item button {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.fab,
+.theme-toggle {
+    position: fixed;
+    bottom: 20px;
+    border-radius: 50%;
+    border: none;
+    width: 52px;
+    height: 52px;
+    font-size: 22px;
+    color: white;
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    transition: transform 0.5s ease;
+}
+
+.fab:hover,
+.theme-toggle:hover {
+    transform: translateY(-3px) scale(1.05);
+}
+
+.fab {
+    left: 20px;
+}
+
+.theme-toggle {
+    right: 20px;
+}
+
+.fab-options {
+    position: fixed;
+    bottom: 85px;
+    left: 20px;
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 999;
+}
+
+.fab-options button {
+    z-index: 999;
+    background: linear-gradient(135deg, var(--accent-light), var(--accent));
+    border: none;
+    padding: 9px 14px;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    backdrop-filter: blur(6px);
+}
+
+.modal-content {
+    background: var(--card);
+    padding: 22px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 400px;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.35);
+}
+
+.modal-content input,
+.modal-content select {
+    width: 100%;
+    padding: 11px;
+    margin: 8px 0;
+    border-radius: 10px;
+    border: 1px solid var(--border-soft);
+}
+
+.modal-content button {
+    width: 100%;
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    color: white;
+    padding: 11px;
+    margin-top: 10px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.footer {
+    z-index: -100;
+    text-align: center;
+    padding: 18px;
+    font-size: 0.9em;
+    opacity: 0.85;
+}
+
+.footer .dev {
+    color: var(--accent);
+    font-weight: 600;
+}
