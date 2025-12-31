@@ -18,8 +18,8 @@ function updateUI() {
 }
 
 function toggleFab() {
-    document.getElementById("fabOptions").style.display =
-        document.getElementById("fabOptions").style.display === "flex" ? "none" : "flex";
+    const fab = document.getElementById("fabOptions");
+    fab.style.display = fab.style.display === "flex" ? "none" : "flex";
 }
 
 function showModal(type) {
@@ -46,10 +46,13 @@ function submitEntry() {
     const name = document.getElementById("modalName").value;
     const date = document.getElementById("modalDate").value;
     const category =
-        currentMode === "spent" ? document.getElementById("modalCategory").value : currentMode;
+        currentMode === "spent"
+            ? document.getElementById("modalCategory").value
+            : currentMode;
+
     if (!amount || !date) return alert("Enter valid data");
 
-    const month = date.slice(0, 7); // yyyy-mm
+    const month = date.slice(0, 7);
     const log = { type: category, amount, name, date, month };
 
     switch (currentMode) {
@@ -57,24 +60,29 @@ function submitEntry() {
             data.received += amount;
             data.withMe += amount;
             break;
+
         case "spent":
             data.spent += amount;
             data.withMe -= amount;
             break;
+
         case "borrowed":
             data.lent += amount;
             data.withMe -= amount;
             break;
+
         case "repayment":
             data.lent -= amount;
             data.withMe += amount;
             break;
+
         case "withMe":
             data.withMe = amount;
             break;
     }
 
     if (currentMode !== "withMe") data.logs.push(log);
+
     updateUI();
     hideModal();
 }
@@ -85,7 +93,7 @@ function renderLogs() {
     const category = document.getElementById("filterCategory").value;
     container.innerHTML = "";
 
-    const logs = data.logs.filter((l) => {
+    const filteredLogs = data.logs.filter((l) => {
         const monthMatch = month === "all" || l.month === month;
         const catMatch = category === "all" || l.type === category;
         return monthMatch && catMatch;
@@ -94,6 +102,7 @@ function renderLogs() {
     const months = [...new Set(data.logs.map((l) => l.month))];
     const monthDropdown = document.getElementById("filterMonth");
     monthDropdown.innerHTML = '<option value="all">All Months</option>';
+
     months.forEach((m) => {
         const opt = document.createElement("option");
         opt.value = m;
@@ -101,47 +110,63 @@ function renderLogs() {
         monthDropdown.appendChild(opt);
     });
 
-    logs.reverse().forEach((log, i) => {
-        const div = document.createElement("div");
-        div.className = "log-item";
-        div.innerHTML = `
-          <div>
-            <strong>${capitalize(log.type)}</strong> ₹${log.amount} 
-            ${log.name ? `to/from ${log.name}` : ""} on ${log.date}
-          </div>
-          <button onclick="deleteLog(${logs.length - 1 - i})">X</button>
-        `;
-        container.appendChild(div);
+    filteredLogs
+        .slice()
+        .reverse()
+        .forEach((log, i) => {
+            const div = document.createElement("div");
+            div.className = "log-item";
+            div.innerHTML = `
+                <div>
+                    <strong>${capitalize(log.type)}</strong>
+                    ₹${log.amount}
+                    ${log.name ? `to/from ${log.name}` : ""}
+                    on ${log.date}
+                </div>
+                <button onclick="deleteLog(${i})">X</button>
+            `;
+            container.appendChild(div);
+        });
+}
+
+function recalculateTotals() {
+    data.received = 0;
+    data.spent = 0;
+    data.lent = 0;
+    data.withMe = 0;
+
+    data.logs.forEach((log) => {
+        switch (log.type) {
+            case "received":
+                data.received += log.amount;
+                data.withMe += log.amount;
+                break;
+
+            case "spent":
+                data.spent += log.amount;
+                data.withMe -= log.amount;
+                break;
+
+            case "borrowed":
+                data.lent += log.amount;
+                data.withMe -= log.amount;
+                break;
+
+            case "repayment":
+                data.lent -= log.amount;
+                data.withMe += log.amount;
+                break;
+        }
     });
 }
 
 function deleteLog(indexFromTop) {
-    const reversedLogs = [...data.logs].reverse();
-    const toDelete = reversedLogs[indexFromTop];
+    const reversed = [...data.logs].reverse();
+    const toDelete = reversed[indexFromTop];
+
     data.logs = data.logs.filter((l) => l !== toDelete);
 
-    // Adjust values
-    if (toDelete) {
-        switch (toDelete.type) {
-            case "received":
-                data.received -= toDelete.amount;
-                data.withMe -= toDelete.amount;
-                break;
-            case "spent":
-                data.spent -= toDelete.amount;
-                data.withMe += toDelete.amount;
-                break;
-            case "borrowed":
-                data.lent -= toDelete.amount;
-                data.withMe += toDelete.amount;
-                break;
-            case "repayed":
-                data.lent += toDelete.amount;
-                data.withMe -= toDelete.amount;
-                break;
-        }
-    }
-
+    recalculateTotals();
     updateUI();
 }
 
@@ -172,16 +197,17 @@ function toggleTheme() {
 function clearAllLogs() {
     if (confirm("Clear all logs?")) {
         data.logs = [];
+        recalculateTotals();
         updateUI();
     }
 }
-
 
 function exportLogs() {
     let csv = "Type,Amount,Name,Date,Month\n";
     data.logs.forEach((l) => {
         csv += `${l.type},${l.amount},${l.name || ""},${l.date},${l.month}\n`;
     });
+
     const blob = new Blob([csv], { type: "text/csv" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
@@ -192,23 +218,29 @@ function exportLogs() {
 function importLogs(e) {
     const file = e.target.files[0];
     if (!file) return;
+
     const reader = new FileReader();
     reader.onload = function (evt) {
         const lines = evt.target.result.split("\n").slice(1);
+
         lines.forEach((line) => {
             const [type, amount, name, date, month] = line.split(",");
+
             if (type && amount && date && month) {
                 data.logs.push({
                     type: type.trim(),
                     amount: parseFloat(amount),
-                    name: name.trim(),
+                    name: name?.trim() || "",
                     date: date.trim(),
                     month: month.trim()
                 });
             }
         });
+
+        recalculateTotals();
         updateUI();
     };
+
     reader.readAsText(file);
 }
 
