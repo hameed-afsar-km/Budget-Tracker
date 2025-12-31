@@ -1,171 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Budget & Expense Tracker</title>
-  <style>
-    :root {
-      --bg: #f3f4f6;
-      --card: #ffffff;
-      --text: #111827;
-      --accent: #2563eb;
-      --accent-light: #3b82f6;
-    }
-    [data-theme="dark"] {
-      --bg: #0f172a;
-      --card: #1e293b;
-      --text: #f8fafc;
-      --accent: #3b82f6;
-      --accent-light: #60a5fa;
-    }
-    * {
-      box-sizing: border-box;
-    }
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
-      padding: 20px;
-    }
-    .card {
-      background: var(--card);
-      border-radius: 16px;
-      padding: 20px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      transition: 0.3s ease;
-    }
-    .card:hover {
-      box-shadow: 0 6px 16px rgba(0,0,0,0.15);
-    }
-    .card-title {
-      font-weight: 600;
-      margin-bottom: 6px;
-      font-size: 1.1rem;
-    }
-    .card-value {
-      font-size: 1.6rem;
-      font-weight: bold;
-      color: var(--accent);
-    }
-    .card-btns {
-      margin-top: 10px;
-      display: flex;
-      gap: 8px;
-    }
-    .card-btns button {
-      background: var(--accent);
-      color: white;
-      border: none;
-      padding: 6px 10px;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    .logs, .filters {
-      padding: 20px;
-    }
-    .filters select, .logs button, input[type="file"] {
-      margin: 10px 10px 10px 0;
-      padding: 8px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-    .log-item {
-      padding: 10px;
-      margin: 6px 0;
-      background: var(--card);
-      border-radius: 10px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .log-item button {
-      background: #ef4444;
-      color: white;
-      border: none;
-      padding: 4px 8px;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .fab, .theme-toggle {
-      position: fixed;
-      bottom: 20px;
-      border-radius: 50%;
-      border: none;
-      width: 50px;
-      height: 50px;
-      font-size: 24px;
-      color: white;
-      background: var(--accent);
-      cursor: pointer;
-    }
-    .fab { left: 20px; }
-    .theme-toggle { right: 20px; }
-    .fab-options {
-      position: fixed;
-      bottom: 80px;
-      left: 20px;
-      display: none;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .fab-options button {
-      background: var(--accent-light);
-      border: none;
-      padding: 8px 12px;
-      color: white;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.6);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 999;
-    }
-    .modal-content {
-      background: var(--card);
-      padding: 20px;
-      border-radius: 12px;
-      width: 90%;
-      max-width: 400px;
-    }
-    .modal-content input, .modal-content select {
-      width: 100%;
-      padding: 10px;
-      margin: 8px 0;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
-    .modal-content button {
-      width: 100%;
-      background: var(--accent);
-      color: white;
-      padding: 10px;
-      margin-top: 10px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-    }
-    .footer {
-      text-align: center;
-      padding: 16px;
-      font-size: 0.9em;
-      color: var(--text);
-    }
-  </style>
+  <link rel="stylesheet" href="styles.css">
 </head>
+
 <body data-theme="light">
-  <!-- Cards Section -->
+
   <div class="grid">
     <div class="card" id="receivedCard">
       <div class="card-title">Received</div>
@@ -201,7 +45,7 @@
     </div>
   </div>
 
-  <!-- Filters -->
+
   <div class="filters">
     <select id="filterMonth" onchange="filterLogs()">
       <option value="all">All Months</option>
@@ -222,10 +66,10 @@
     <input type="file" onchange="importLogs(event)" />
   </div>
 
-  <!-- Logs Section -->
+
   <div class="logs" id="logList"></div>
 
-  <!-- Floating Buttons -->
+
   <button class="fab" onclick="toggleFab()">+</button>
   <div class="fab-options" id="fabOptions">
     <button onclick="showModal('received')">Received</button>
@@ -236,9 +80,9 @@
   </div>
   <button class="theme-toggle" onclick="toggleTheme()">☀️</button>
 
-  <!-- Footer -->
-  <div class="footer">&copy; Developed by Hameed Afsar K M.</div>
-  <!-- Modals -->
+
+  <div class="footer">&copy; Developed by <span class="dev">Hameed Afsar K M.</span></div>
+
   <div class="modal" id="entryModal">
     <div class="modal-content">
       <h3 id="modalTitle">Add Entry</h3>
@@ -256,232 +100,7 @@
     </div>
   </div>
 
-  <script>
-    let data = {
-      received: 0,
-      spent: 0,
-      lent: 0,
-      withMe: 0,
-      logs: []
-    };
-
-    let currentMode = '';
-
-    function updateUI() {
-      document.getElementById("receivedAmount").textContent = `₹${data.received}`;
-      document.getElementById("spentAmount").textContent = `₹${data.spent}`;
-      document.getElementById("lentAmount").textContent = `₹${data.lent}`;
-      document.getElementById("withMeAmount").textContent = `₹${data.withMe}`;
-      renderLogs();
-      localStorage.setItem("budgetData", JSON.stringify(data));
-    }
-
-    function toggleFab() {
-      document.getElementById("fabOptions").style.display =
-        document.getElementById("fabOptions").style.display === "flex" ? "none" : "flex";
-    }
-
-    function showModal(type) {
-      currentMode = type;
-      document.getElementById("modalTitle").textContent = `Add ${capitalize(type)}`;
-      document.getElementById("modalCategory").style.display =
-        type === "spent" ? "block" : "none";
-      document.getElementById("entryModal").style.display = "flex";
-      document.getElementById("modalAmount").value = "";
-      document.getElementById("modalName").value = "";
-      document.getElementById("modalDate").valueAsDate = new Date();
-    }
-
-    function hideModal() {
-      document.getElementById("entryModal").style.display = "none";
-    }
-
-    window.onclick = function (e) {
-      if (e.target.classList.contains("modal")) hideModal();
-    };
-
-    function submitEntry() {
-      const amount = parseFloat(document.getElementById("modalAmount").value);
-      const name = document.getElementById("modalName").value;
-      const date = document.getElementById("modalDate").value;
-      const category =
-        currentMode === "spent" ? document.getElementById("modalCategory").value : currentMode;
-      if (!amount || !date) return alert("Enter valid data");
-
-      const month = date.slice(0, 7); // yyyy-mm
-      const log = { type: category, amount, name, date, month };
-
-      switch (currentMode) {
-        case "received":
-          data.received += amount;
-          data.withMe += amount;
-          break;
-        case "spent":
-          data.spent += amount;
-          data.withMe -= amount;
-          break;
-        case "borrowed":
-          data.lent += amount;
-          data.withMe -= amount;
-          break;
-        case "repayment":
-          data.lent -= amount;
-          data.withMe += amount;
-          break;
-        case "withMe":
-          data.withMe = amount;
-          break;
-      }
-
-      if (currentMode !== "withMe") data.logs.push(log);
-      updateUI();
-      hideModal();
-    }
-
-    function renderLogs() {
-      const container = document.getElementById("logList");
-      const month = document.getElementById("filterMonth").value;
-      const category = document.getElementById("filterCategory").value;
-      container.innerHTML = "";
-
-      const logs = data.logs.filter((l) => {
-        const monthMatch = month === "all" || l.month === month;
-        const catMatch = category === "all" || l.type === category;
-        return monthMatch && catMatch;
-      });
-
-      const months = [...new Set(data.logs.map((l) => l.month))];
-      const monthDropdown = document.getElementById("filterMonth");
-      monthDropdown.innerHTML = '<option value="all">All Months</option>';
-      months.forEach((m) => {
-        const opt = document.createElement("option");
-        opt.value = m;
-        opt.textContent = m;
-        monthDropdown.appendChild(opt);
-      });
-
-      logs.reverse().forEach((log, i) => {
-        const div = document.createElement("div");
-        div.className = "log-item";
-        div.innerHTML = `
-          <div>
-            <strong>${capitalize(log.type)}</strong> ₹${log.amount} 
-            ${log.name ? `to/from ${log.name}` : ""} on ${log.date}
-          </div>
-          <button onclick="deleteLog(${logs.length - 1 - i})">X</button>
-        `;
-        container.appendChild(div);
-      });
-    }
-
-    function deleteLog(indexFromTop) {
-      const reversedLogs = [...data.logs].reverse();
-      const toDelete = reversedLogs[indexFromTop];
-      data.logs = data.logs.filter((l) => l !== toDelete);
-
-      // Adjust values
-      if (toDelete) {
-        switch (toDelete.type) {
-          case "received":
-            data.received -= toDelete.amount;
-            data.withMe -= toDelete.amount;
-            break;
-          case "spent":
-            data.spent -= toDelete.amount;
-            data.withMe += toDelete.amount;
-            break;
-          case "borrowed":
-            data.lent -= toDelete.amount;
-            data.withMe += toDelete.amount;
-            break;
-          case "repayed":
-            data.lent += toDelete.amount;
-            data.withMe -= toDelete.amount;
-            break;
-        }
-      }
-
-      updateUI();
-    }
-
-    function capitalize(txt) {
-      return txt.charAt(0).toUpperCase() + txt.slice(1);
-    }
-
-    function manualUpdate(type) {
-      const amt = prompt(`Enter new value for ${capitalize(type)}:`);
-      if (!amt || isNaN(amt)) return;
-      data[type] = parseFloat(amt);
-      updateUI();
-    }
-
-    function resetAmount(type) {
-      if (confirm(`Reset ${capitalize(type)} to 0?`)) {
-        data[type] = 0;
-        updateUI();
-      }
-    }
-
-    function toggleTheme() {
-      const current = document.body.getAttribute("data-theme");
-      const next = current === "dark" ? "light" : "dark";
-      document.body.setAttribute("data-theme", next);
-    }
-
-    function clearAllLogs() {
-      if (confirm("Clear all logs?")) {
-        data.logs = [];
-        updateUI();
-      }
-    }
-
-
-    function exportLogs() {
-      let csv = "Type,Amount,Name,Date,Month\n";
-      data.logs.forEach((l) => {
-        csv += `${l.type},${l.amount},${l.name || ""},${l.date},${l.month}\n`;
-      });
-      const blob = new Blob([csv], { type: "text/csv" });
-      const a = document.createElement("a");
-      a.href = URL.createObjectURL(blob);
-      a.download = "budget_logs.csv";
-      a.click();
-    }
-
-    function importLogs(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function (evt) {
-        const lines = evt.target.result.split("\n").slice(1);
-        lines.forEach((line) => {
-          const [type, amount, name, date, month] = line.split(",");
-          if (type && amount && date && month) {
-            data.logs.push({
-              type: type.trim(),
-              amount: parseFloat(amount),
-              name: name.trim(),
-              date: date.trim(),
-              month: month.trim()
-            });
-          }
-        });
-        updateUI();
-      };
-      reader.readAsText(file);
-    }
-
-    function filterLogs() {
-      renderLogs();
-    }
-
-    function init() {
-      const stored = localStorage.getItem("budgetData");
-      if (stored) data = JSON.parse(stored);
-      updateUI();
-    }
-
-    init();
-  </script>
+  <script src="script.js"></script>
 </body>
+
 </html>
